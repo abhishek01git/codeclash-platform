@@ -1,0 +1,24 @@
+{
+  "name": "codeclash-platform",
+  "version": "1.0.0",
+  "description": "CodeClash - Fullstack MERN Competitive Coding, LeetCode Features, 1v1 Coin Betting Duels & Live Mock Interview Platform",
+  "scripts": {
+    "server": "npm --prefix server start",
+    "client": "npm --prefix client run dev",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "build:client": "npm --prefix client run build"
+  },
+  "keywords": [
+    "mern",
+    "leetcode",
+    "interview-platform",
+    "coding-duels",
+    "betting-coins",
+    "socket.io",
+    "monaco-editor",
+    "competitive-programming"
+  ],
+  "author": "CodeClash Team",
+  "license": "MIT"
+}
