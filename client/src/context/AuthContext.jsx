@@ -49,14 +49,19 @@ export function AuthProvider({ children }) {
 
   const register = async (username, email, password) => {
     const data = await api.register({ username, email, password });
+    return data;
+  };
+
+  const verifySignupOtp = async (email, code) => {
+    const data = await api.verifySignupOtp({ email, code });
     setToken(data.token);
     setUser(data.user);
     fetchProfile();
     return data.user;
   };
 
-  const googleAuth = async ({ email, username, googleId, avatar }) => {
-    const data = await api.googleAuth({ email, username, googleId, avatar });
+  const googleAuth = async (credential) => {
+    const data = await api.googleAuth(credential);
     setToken(data.token);
     setUser(data.user);
     fetchProfile();
@@ -90,12 +95,14 @@ export function AuthProvider({ children }) {
         loading,
         login,
         register,
+        verifySignupOtp,
         logout,
         updateCoins,
         refreshUser,
         dailyStatus,
         showDailyModal,
-        setShowDailyModal
+        setShowDailyModal,
+        googleAuth,
       }}
     >
       {children}

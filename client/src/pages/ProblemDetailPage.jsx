@@ -43,6 +43,8 @@ export default function ProblemDetailPage({ slug, onBack }) {
   const [consoleTab, setConsoleTab] = useState('testcase'); // 'testcase', 'result'
   const [runResult, setRunResult] = useState(null);
   const [submitResult, setSubmitResult] = useState(null);
+  const [showTestPassedModal, setShowTestPassedModal] = useState(false);
+  const [showSubmitSuccessModal, setShowSubmitSuccessModal] = useState(false);
   const [showHints, setShowHints] = useState({});
 
   // Submissions & Discussions
@@ -119,6 +121,11 @@ export default function ProblemDetailPage({ slug, onBack }) {
       const data = await api.runCode(slug, { code, language });
       setRunResult(data.result);
       setSubmitResult(null);
+
+      if (data.result.status === 'Accepted' || (data.result.passedTestCases > 0 && data.result.passedTestCases === data.result.totalTestCases)) {
+        confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+        setShowTestPassedModal(true);
+      }
     } catch (err) {
       setRunResult({
         status: 'Runtime Error',
@@ -142,7 +149,7 @@ export default function ProblemDetailPage({ slug, onBack }) {
 
       if (data.result.status === 'Accepted') {
         confetti({
-          particleCount: 120,
+          particleCount: 130,
           spread: 80,
           origin: { y: 0.6 }
         });
@@ -150,6 +157,9 @@ export default function ProblemDetailPage({ slug, onBack }) {
           updateCoins(data.userCoins);
         }
         await refreshUser();
+        setShowSubmitSuccessModal(true);
+      } else {
+        toastError(`Submission status: ${data.result.status} (${data.result.passedTestCases || 0}/${data.result.totalTestCases || 0} passed)`);
       }
       loadSubmissions();
     } catch (err) {
@@ -818,6 +828,82 @@ export default function ProblemDetailPage({ slug, onBack }) {
             <pre className="bg-[#0d1117] border border-[#30363d] rounded-xl p-4 text-xs font-mono overflow-x-auto max-h-[60vh] text-emerald-300">
               {viewingSubmissionCode}
             </pre>
+          </div>
+        </div>
+      )}
+
+      {/* Test Cases Passed Modal */}
+      {showTestPassedModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 animate-in fade-in">
+          <div className="bg-[#161b22] border border-emerald-500/40 rounded-3xl p-6 w-full max-w-md text-white text-center shadow-2xl relative">
+            <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 mx-auto flex items-center justify-center mb-3">
+              <CheckCircle2 className="w-8 h-8" />
+            </div>
+            <h3 className="text-xl font-extrabold text-white">All Test Cases Passed! 🎉</h3>
+            <p className="text-xs text-gray-300 mt-2">
+              Your solution passed all sample test cases ({runResult?.passedTestCases}/{runResult?.totalTestCases}) in {runResult?.runtime}ms.
+            </p>
+            <div className="flex items-center justify-center gap-3 mt-6">
+              <button
+                onClick={() => setShowTestPassedModal(false)}
+                className="px-4 py-2 rounded-xl bg-[#21262d] hover:bg-[#30363d] text-gray-300 text-xs font-semibold cursor-pointer"
+              >
+                Keep Editing
+              </button>
+              <button
+                onClick={() => {
+                  setShowTestPassedModal(false);
+                  handleSubmitCode();
+                }}
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs shadow-lg cursor-pointer flex items-center gap-1.5"
+              >
+                <Send className="w-3.5 h-3.5" />
+                Submit Solution Now 🚀
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Submit Successfully Modal */}
+      {showSubmitSuccessModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in zoom-in-95">
+          <div className="bg-[#161b22] border border-amber-500/40 rounded-3xl p-6 w-full max-w-md text-white text-center shadow-2xl relative">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500/20 to-yellow-500/20 border border-amber-500/40 text-amber-400 mx-auto flex items-center justify-center mb-4">
+              <Sparkles className="w-9 h-9" />
+            </div>
+            <span className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-extrabold rounded-full">
+              Status: Accepted
+            </span>
+            <h3 className="text-2xl font-black text-white mt-2">Submitted Successfully! 🚀</h3>
+            <p className="text-xs text-gray-400 mt-1">
+              Congratulations! Your solution passed all test cases and is officially recorded.
+            </p>
+
+            <div className="grid grid-cols-3 gap-2 my-5 p-3 rounded-2xl bg-[#0d1117] border border-[#30363d] text-center">
+              <div>
+                <div className="text-[10px] text-gray-400 uppercase font-bold">Runtime</div>
+                <div className="text-sm font-extrabold text-emerald-400">{submitResult?.result?.runtime || 40} ms</div>
+              </div>
+              <div>
+                <div className="text-[10px] text-gray-400 uppercase font-bold">Memory</div>
+                <div className="text-sm font-extrabold text-blue-400">{submitResult?.result?.memory || 42.1} MB</div>
+              </div>
+              <div>
+                <div className="text-[10px] text-gray-400 uppercase font-bold">Reward</div>
+                <div className="text-sm font-extrabold text-amber-400 flex items-center justify-center gap-1">
+                  <Coins className="w-3.5 h-3.5 fill-amber-400" />
+                  +{submitResult?.coinsAwarded || 50}
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowSubmitSuccessModal(false)}
+              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-black font-extrabold text-xs shadow-lg cursor-pointer"
+            >
+              Awesome, Continue!
+            </button>
           </div>
         </div>
       )}

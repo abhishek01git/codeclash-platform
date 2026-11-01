@@ -42,11 +42,11 @@ async function request(endpoint, options = {}) {
 export const api = {
   // Auth
   register: (body) => request('/auth/register', { method: 'POST', body }),
+  verifySignupOtp: (body) => request('/auth/register/verify-otp', { method: 'POST', body }),
   login: (body) => request('/auth/login', { method: 'POST', body }),
-  googleAuth: (body) => request('/auth/google', { method: 'POST', body }),
+  googleAuth: (credential) => request('/auth/google', { method: 'POST', body: { credential } }),
   getMe: () => request('/auth/me'),
   updateProfile: (body) => request('/auth/me', { method: 'PUT', body }),
-  demoSwitch: (targetUserId) => request('/auth/demo-switch', { method: 'POST', body: { targetUserId } }),
 
   // Problems (LeetCode)
   getProblems: (params = {}) => {
@@ -101,6 +101,8 @@ export const api = {
 
   // Interview Platform
   createInterviewRoom: (body) => request('/interview/create-room', { method: 'POST', body }),
+  getMyInterviewRooms: () => request('/interview/my-rooms'),
   getInterviewRoom: (roomId) => request(`/interview/room/${roomId}`),
+  endInterviewRoom: (roomId) => request(`/interview/room/${roomId}/end`, { method: 'POST' }),
   submitInterviewFeedback: (roomId, body) => request(`/interview/room/${roomId}/feedback`, { method: 'POST', body })
 };

@@ -17,7 +17,11 @@ const interviewRoomSchema = new mongoose.Schema({
   hostName: { type: String, required: true },
   hostRole: { type: String, enum: ['interviewer', 'candidate'], default: 'interviewer' },
   candidateId: { type: String, default: null },
+  candidateEmail: { type: String, default: null },
+  candidateName: { type: String, default: null },
   interviewerId: { type: String, default: null },
+  scheduledTime: { type: Date, default: null },
+  initialPlatform: { type: String, enum: ['code', 'whiteboard', 'screenshare'], default: 'code' },
   problemSlug: { type: String, required: true },
   problemTitle: { type: String, required: true },
   code: { type: String, default: '' },
@@ -25,7 +29,7 @@ const interviewRoomSchema = new mongoose.Schema({
   whiteboardStrokes: { type: mongoose.Schema.Types.Mixed, default: [] },
   notes: { type: String, default: '' },
   evaluation: { type: evaluationSchema, default: null },
-  status: { type: String, enum: ['active', 'completed'], default: 'active' }
+  status: { type: String, enum: ['active', 'scheduled', 'completed'], default: 'active' }
 }, { timestamps: true });
 
 export const InterviewRoom = mongoose.model('InterviewRoom', interviewRoomSchema);

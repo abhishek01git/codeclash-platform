@@ -6,7 +6,7 @@ A full-stack **MERN (MongoDB, Express, React, Node.js)** platform engineered wit
 
 ## 🌟 Key Platform Features
 
-### 1. 💻 Full LeetCode Coding Platform
+### 1. 💻 Full  Coding Platform
 * **Problem Catalog**: Filter by Difficulty (*Easy*, *Medium*, *Hard*), Completion Status (*Solved*, *Todo*), and Tags (*Array, String, Dynamic Programming, Two Pointers, Stack, Hash Table, Math*).
 * **Rich Problem Workspace**: Detailed problem descriptions, formatted examples with explanations, constraints, and interactive expandable hints.
 * **In-Browser Monaco Code Editor**: Dark theme (VS Code / LeetCode style), syntax highlighting, line numbers, automatic indentation, language switcher (JavaScript, Python), and template reset.
@@ -113,6 +113,22 @@ npm run dev
 ```
 
 Open your browser at **`http://localhost:5173/`**.
+
+### Authentication setup
+
+Email registrations are created only after the user enters the six-digit OTP sent to their inbox. Copy `server/.env.example` to `server/.env` and configure a working SMTP account plus a long, random `JWT_SECRET`.
+
+For Google Sign-In, create a **Web application** OAuth client in Google Cloud Console. Add your local and deployed origins to its authorized JavaScript origins, then set the same client ID in both files:
+
+```bash
+# server/.env
+GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+
+# client/.env
+VITE_GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+```
+
+The backend validates Google ID tokens and their audience before issuing its own seven-day CodeClash JWT. Never put SMTP passwords or `JWT_SECRET` values in the client environment file.
 
 ---
 

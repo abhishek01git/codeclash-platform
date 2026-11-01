@@ -1,5 +1,7 @@
 import express from 'express';
 import http from 'http';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -15,7 +17,28 @@ import chatRoutes from './routes/chatRoutes.js';
 import rewardRoutes from './routes/rewardRoutes.js';
 import interviewRoutes from './routes/interviewRoutes.js';
 
-dotenv.config();
+// Always load the backend's own configuration, even when an IDE starts Node
+// from the repository root instead of the server directory.
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const result = dotenv.config({
+  path: path.resolve(__dirname, '../.env'),
+  override: true
+});
+
+console.log('DOTENV RESULT:', result.error || 'Loaded successfully');
+
+console.log('SMTP STATUS:', {
+  host: Boolean(process.env.SMTP_HOST),
+  user: Boolean(process.env.SMTP_USER),
+  pass: Boolean(process.env.SMTP_PASS),
+  port: process.env.SMTP_PORT || 'Missing'
+});
+
+const missingSmtpSettings = ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS'].filter((name) => !process.env[name]);
+if (missingSmtpSettings.length) {
+  console.warn(`[Config] Email OTP is disabled. Missing: ${missingSmtpSettings.join(', ')}`);
+}
 
 const app = express();
 const server = http.createServer(app);

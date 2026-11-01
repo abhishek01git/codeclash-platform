@@ -307,43 +307,56 @@ export default function DuelArenaPage({ onEnterDuel }) {
             </div>
 
             <div className="space-y-3">
-              {leaderboard.slice(0, 5).map((userRank, idx) => (
-                <div
-                  key={userRank._id}
-                  className="flex items-center justify-between p-2.5 rounded-xl bg-[#0d1117] border border-[#21262d] text-xs"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <span
-                      className={`w-5 h-5 rounded-full flex items-center justify-center font-extrabold text-[10px] ${
-                        idx === 0
-                          ? 'bg-amber-500 text-black'
-                          : idx === 1
-                          ? 'bg-gray-300 text-black'
-                          : idx === 2
-                          ? 'bg-amber-700 text-white'
-                          : 'bg-[#21262d] text-gray-400'
-                      }`}
-                    >
-                      {idx + 1}
-                    </span>
-                    <img src={userRank.avatar} alt="" className="w-7 h-7 rounded-full object-cover" />
-                    <div>
-                      <div className="font-bold text-white">{userRank.username}</div>
-                      <div className="text-[10px] text-gray-400">
-                        {userRank.duelsWon}W / {userRank.duelsLost}L ({userRank.winRate}% win)
+              {leaderboard.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-8 text-center">
+                  <Swords className="w-8 h-8 text-gray-600 mb-2" />
+                  <p className="text-sm font-semibold text-gray-400">No duelists yet!</p>
+                  <p className="text-xs text-gray-600 mt-1">Create a duel and be the first on the board.</p>
+                </div>
+              ) : (
+                leaderboard.slice(0, 5).map((userRank, idx) => (
+                  <div
+                    key={userRank._id}
+                    className="flex items-center justify-between p-2.5 rounded-xl bg-[#0d1117] border border-[#21262d] text-xs"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <span
+                        className={`w-5 h-5 rounded-full flex items-center justify-center font-extrabold text-[10px] ${
+                          idx === 0
+                            ? 'bg-amber-500 text-black'
+                            : idx === 1
+                            ? 'bg-gray-300 text-black'
+                            : idx === 2
+                            ? 'bg-amber-700 text-white'
+                            : 'bg-[#21262d] text-gray-400'
+                        }`}
+                      >
+                        {idx + 1}
+                      </span>
+                      <img
+                        src={userRank.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${userRank.username}`}
+                        alt=""
+                        className="w-7 h-7 rounded-full object-cover"
+                        onError={(e) => { e.target.src = `https://api.dicebear.com/7.x/bottts/svg?seed=${userRank.username}`; }}
+                      />
+                      <div>
+                        <div className="font-bold text-white">{userRank.username}</div>
+                        <div className="text-[10px] text-gray-400">
+                          {userRank.duelsWon}W / {userRank.duelsLost}L ({userRank.winRate}% win)
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="text-right">
-                    <span className="font-extrabold text-amber-400 flex items-center gap-1">
-                      <Coins className="w-3 h-3 fill-amber-400" />
-                      {userRank.duelCoinsWon || userRank.coins}
-                    </span>
-                    <span className="text-[9px] text-gray-500 uppercase">Coins Won</span>
+                    <div className="text-right">
+                      <span className="font-extrabold text-amber-400 flex items-center gap-1">
+                        <Coins className="w-3 h-3 fill-amber-400" />
+                        {userRank.duelCoinsWon || userRank.coins}
+                      </span>
+                      <span className="text-[9px] text-gray-500 uppercase">Coins Won</span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
 
