@@ -34,13 +34,6 @@ A full-stack **MERN (MongoDB, Express, React, Node.js)** platform engineered wit
 
 ### 3. 🪙 Daily Login Streaks & Gamified Quests
 * **7-Day Daily Login Streak**:
-  * Day 1: +50 Coins
-  * Day 2: +75 Coins
-  * Day 3: +100 Coins
-  * Day 4: +130 Coins
-  * Day 5: +160 Coins
-  * Day 6: +200 Coins
-  * Day 7: +300 Coins
 * **Daily Quests & Tasks**:
   * *Problem Solver I*: Solve 1 Easy problem (+30 Coins)
   * *Algo Champion*: Solve 1 Medium/Hard problem (+60 Coins)
@@ -86,14 +79,6 @@ A full-stack **MERN (MongoDB, Express, React, Node.js)** platform engineered wit
 
 ## 🚀 Running the Project
 
-### Prerequisites
-- Node.js v18+ (tested on Node.js v22)
-- MongoDB (optional, MongoDB service on `mongodb://127.0.0.1:27017` is automatically used if present, otherwise built-in persistent storage engine runs with zero setup)
-
-### Start Backend and Frontend
-From the root directory (`C:\Users\abhis\.gemini\antigravity\scratch\codeclash-platform`):
-
-```bash
 # Start backend server (port 5000)
 npm run server
 
@@ -132,13 +117,3 @@ The backend validates Google ID tokens and their audience before issuing its own
 
 ---
 
-## 🧪 Quick Test Guide: 1v1 Duels & Chat
-To easily test two users competing against each other:
-1. Open **`http://localhost:5173`** in your browser. You are automatically logged in as **`DemoUser`** with 450 Coins.
-2. In the top navbar, click the **"User: DemoUser"** dropdown.
-3. You can switch between pre-seeded active accounts with 1 click:
-   - **`DemoUser`** (Challenger)
-   - **`AlexCoder`** (Friend & Duelist)
-   - **`SarahAlgo`** (ICPC Finalist & High Roller)
-   - **`TechInterviewer`** (Staff Engineer)
-4. Open an Incognito window or second browser tab, switch to **`AlexCoder`**, and battle **`DemoUser`** in the **1v1 Arena** to watch live test case progress and coin payouts in real time!
